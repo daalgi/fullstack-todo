@@ -12,8 +12,8 @@ const App = () =>
         {/*<AppContext.Provider value={getContext()}>*/}
             <Layout>
                 <Switch>
-                    {/*[...barRoutes, ...internalRoutes].map((item, index) =>*/
-                    barRoutes.map((item, index) =>
+                    {[...barRoutes, ...internalRoutes].map((item, index) =>
+                    //barRoutes.map((item, index) =>
                         <Route
                             key={index}
                             path={item.path}

@@ -13,7 +13,14 @@ const firebaseConfig = {
     measurementId: process.env.MEASUREMENT_ID
 }
 firebase.initializeApp(firebaseConfig)
-firebase.functions().useFunctionsEmulator('http://localhost:4000/api'); // Client url + /api
+/*if (windows.location.hostname === "localhost") {
+    firebase.functions().useFunctionsEmulator('http://localhost:4000/api'); // Client url + /api
+    firebase.auth().useEmulator('http://localhost:9099/')
+    firebase.firestore().settings({
+        host: "localhost:8080",
+        ssl: false
+    })
+}*/
 
 const { validateLoginData, validateSignUpData } = require('../util/validators')
 

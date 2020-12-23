@@ -9,7 +9,7 @@ const {
     editTodo
 } = require('./APIs/todos')
 
-app.get('/todos', auth, getAllTodos)
+app.get('/todos', getAllTodos)
 app.post('/todo', auth, postOneTodo)
 app.delete('/todo/:todoId', auth, deleteTodo)
 app.put('/todo/:todoId', auth, editTodo)
