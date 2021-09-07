@@ -1,4 +1,4 @@
-const PRIORITY_VALUES = [1, 2, 3]
+const PRIORITY_VALUES = ['high', 'normal', 'low']
 
 const apiTodos = [
     {
@@ -10,7 +10,7 @@ const apiTodos = [
             due: null,
             done: null
         },
-        priority: "2",
+        priority: "normal",
         tags: ["foundation", "concrete", "reinforcement"]
     },
     {
@@ -22,19 +22,19 @@ const apiTodos = [
             due: "2020-12-23",
             done: "2020-11-12"
         },
-        priority: "1",
+        priority: "high",
         tags: ["foundation"]
     },
     {
         _id: 3,
         user: "daalgi",
-        text: "5113 - Optimize the shear reinforcement with less bars of greater diameter and higher strength grade. Do not consider the minimum reinforcement accordingto EN1992-1-1. Optimize the shear reinforcement with less bars of greater diameter and higher strength grade. Do not consider the minimum reinforcement accordingto EN1992-1-1. Optimize the shear reinforcement with less bars of greater diameter and higher strength grade. Do not consider the minimum reinforcement accordingto EN1992-1-1.",
+        text: "5113 - Optimize the shear reinforcement with less bars of greater diameter and higher strength grade. Do not consider the minimum reinforcement accordingto EN1992-1-1.",
         date: {
             created: "2020-10-13",
             due: "2020-12-31",
             done: null
         },
-        priority: "3",
+        priority: "low",
         tags: ["foundation", "concrete", "reinforcement"]
     },
     {
@@ -46,19 +46,30 @@ const apiTodos = [
             due: "2020-12-25",
             done: "2020-11-02"
         },
-        priority: "1",
+        priority: "normal",
         tags: ["foundation"]
     }
 ]
+/*
 for (let i = 0; i < 10; i++) {
     apiTodos.push({
-        _id: 5+i, user: "daalgi", text: "Alea iacta est.", priority:"2", tags: ["latin"],
+        _id: 5+i, user: "daalgi", text: "Alea iacta est.", priority:"low", tags: ["latin"],
         date: { created: "2020-10-"+String(i), due: "2020-12-2"+String(i), done: null }
     })
-}
+}*/
 
+
+const DEFAULT_TODO = {
+    _id: null,
+    user: "",
+    text: "",
+    date: { created: null, due: null, done: null },
+    priority: 2,
+    tags: []
+}
 
 export {
     PRIORITY_VALUES,
-    apiTodos
+    apiTodos,
+    DEFAULT_TODO
 }

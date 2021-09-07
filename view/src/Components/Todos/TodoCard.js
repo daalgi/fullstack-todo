@@ -5,9 +5,14 @@ import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Switch from '@material-ui/core/Switch'
 import Button from '@material-ui/core/Button'
 import ButtonGroup from '@material-ui/core/ButtonGroup'
+import IconButton from '@material-ui/core/IconButton'
+import DeleteIcon from '@material-ui/icons/Delete'
+import EditIcon from '@material-ui/icons/Edit'
+
 import { makeStyles } from '@material-ui/core/styles'
 
 import PriorityRadioButtons from './PriorityRadioButtons'
+import DoneSwitch from './DoneSwitch'
 
 
 const useStyles = makeStyles(theme => ({
@@ -42,6 +47,11 @@ const useStyles = makeStyles(theme => ({
         justifyContent: "space-between",
         marginBottom: "8px"
     },
+    headerButtons: {
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "end"
+    },
     content: {
         display: "flex",
         justifyContent: "space-between",
@@ -54,11 +64,6 @@ const useStyles = makeStyles(theme => ({
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between"
-    },
-    rightPane: {
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "start"
     },
     tags: {
         marginTop: "24px"
@@ -88,8 +93,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 
-const TodoCard = ({ _id, text, date, priority, tags, 
-    changeDone, changePriority }) => {
+const TodoCard = ({ _id, text, date, priority, tags, changeDone, editTodo, removeTodo }) => {
     const classes = useStyles()
 
     return (
@@ -98,31 +102,26 @@ const TodoCard = ({ _id, text, date, priority, tags,
                 <Typography variant="caption" align="left">
                     Due: {date?.due || 'undefined'}
                 </Typography>
-                
+
                 {date?.done &&
                     <Typography variant="caption" align="right">
                         Done: {date.done}
                     </Typography>
                 }
-            </div>
-            <div className={classes.content}>
-                <div className={classes.leftPane}>
-                    <div>
-                        <Typography variant="body1">{text}</Typography>
-                    </div>
-                    <div className={classes.tags}>
-                        {tags?.length && tags.map((tag, index) =>
-                            <div key={index} className={classes.chip}>{tag}</div>
-                        )}
-                    </div>
-                </div>
-                <div className={classes.rightPane}>
-                    {/*<PriorityRadioButtons 
-                        _id={_id} 
-                        priority={priority}
-                        changePriority={changePriority}
+                <div className={classes.headerButtons}>
+                    <IconButton aria-label="edit" onClick={() => editTodo(_id)}
+                    >
+                        <EditIcon />
+                    </IconButton>
+                    <IconButton aria-label="delete" onClick={() => removeTodo(_id)}
+                    >
+                        <DeleteIcon />
+                    </IconButton>
+                    <DoneSwitch
+                        dateDone={date.done}
+                        onChange={() => changeDone({ _id })}
                     />
-                    <br />*/}
+                    {/*
                     <FormControlLabel
                         control={
                             <Switch
@@ -134,7 +133,21 @@ const TodoCard = ({ _id, text, date, priority, tags,
                         }
                         label="Done"
                     />
+                    */}
                 </div>
+            </div>
+            <div className={classes.content}>
+                <div className={classes.leftPane}>
+                    <div>
+                        <Typography variant="body1">{text}</Typography>
+                    </div>
+                    <div className={classes.tags}>
+                        {tags.length > 0 && tags.map((tag, index) =>
+                            <div key={index} className={classes.chip}>{tag}</div>
+                        )}
+                    </div>
+                </div>
+
             </div>
         </div >
     )

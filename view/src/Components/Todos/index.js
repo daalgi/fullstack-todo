@@ -4,8 +4,9 @@ import { makeStyles } from '@material-ui/core/styles'
 
 import TodoList from './TodoList'
 import Menu from './Menu'
+import DialogForm from './DialogForm'
 import { todayFormattedDate, filterAndSortTodos, countTodos } from './utils'
-import { apiTodos } from './config'
+import { apiTodos, DEFAULT_TODO } from './config'
 
 
 const useStyles = makeStyles(theme => ({
@@ -41,24 +42,18 @@ const useStyles = makeStyles(theme => ({
     },
 }))
 
-const DEFAULT_TODO = {
-    _id: 0,
-    user: "",
-    text: "",
-    date: { created: null, due: null, done: null },
-    priority: 2,
-    tags: []
-}
-
 const TodoLayout = () => {
-    const [currentTodo, setCurrentTodo] = useState(DEFAULT_TODO)
+    const [todoForm, setTodoForm] = useState({
+        open: false,
+        currentTodo: DEFAULT_TODO
+    })
     const [todos, setTodos] = useState([])
     const [filters, setFilters] = useState({
         done: true,
         notDone: true,
         dateDueUndefined: false,
         dateCreated: null,
-        dateDue: null,        
+        dateDue: null,
         dateDone: null,
         priority: null,
         text: null
@@ -92,25 +87,36 @@ const TodoLayout = () => {
         if (todos.length) {
             console.log('useEffect [todos]')
             setCounter(countTodos(todos))
-        }        
+        }
     }, [todos])
 
-    const handleSelectCurrentTodo = _id =>
-        setCurrentTodo(todos.find(t => t._id === _id))
 
-    const handleNewTodo = todo => 
-        setTodos([ todo, ...todos ])
+    const handleTodoFormClickOpenNewTodo = () =>
+        setTodoForm({ currentTodo: DEFAULT_TODO, open: true })
 
-    const handleRemoveTodo = _id => 
+    const handleTodoFormClickEditTodo = _id =>
+        setTodoForm({ currentTodo: todos.find(t => t._id === _id), open: true })
+
+
+    const handleTodoFormClose = ({ save = false, todo = {} }) => {
+        if (save) {
+            if (todoForm.currentTodo._id) {
+                // Edit todo
+                // apiPutTodo()
+                setTodos(todos.map(t => t._id == todo._id ? todo : t))
+
+            } else {
+                // New todo
+                // apiPostTodo()
+                setTodos([todo, ...todos])
+            }
+        }
+        // Close Dialog
+        setTodoForm({ ...todoForm, open: false })
+    }    
+
+    const handleRemoveTodo = _id =>
         setTodos(todos.filter(t => t._id !== _id))
-
-    const handleSubmitEditTodo = todo => 
-        setTodos(todos.map(t => t._id == todo._id ? todo : t))
-
-    const handleChangePriority = ({ _id, priority }) =>
-        setTodos(todos.map(todo =>
-            todo._id === _id ? { ...todo, priority } : todo
-        ))
 
     const handleTodoDone = ({ _id }) =>
         setTodos(todos.map(todo =>
@@ -127,18 +133,26 @@ const TodoLayout = () => {
     //console.log(todos)
     //console.log(filters)
     //console.log(counter)
+    //console.log(todoForm.currentTodo)
     return (
         <section className={classes.pageContainer}>
             <div className={classes.grid}>
                 <TodoList
                     todos={filterAndSortTodos({ todos, filters })}
                     changeDone={handleTodoDone}
-                    changePriority={handleChangePriority}
+                    editTodo={handleTodoFormClickEditTodo}
+                    removeTodo={handleRemoveTodo}
                 />
-                <Menu 
+                <Menu
+                    handleTodoFormClickOpenNewTodo={handleTodoFormClickOpenNewTodo}
                     filters={filters}
                     setFilters={setFilters}
                     counter={counter}
+                />
+                <DialogForm
+                    open={todoForm.open}
+                    currentTodo={todoForm.currentTodo}
+                    handleTodoFormClose={handleTodoFormClose}
                 />
             </div>
         </section>

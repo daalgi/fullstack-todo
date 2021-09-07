@@ -1,11 +1,11 @@
-import dayjs from 'dayjs'
-import isBetween from 'dayjs/plugin/isBetween'
+import startOfWeek from 'date-fns/startOfWeek'
+import endOfWeek from 'date-fns/endOfWeek'
+import isValid from 'date-fns/isValid'
+
 
 /**
  * DATE RELATED FUNCTIONS
  */
-dayjs.extend(isBetween)
-
 const formatDate = date =>
     date.getFullYear() + '-' +
     ("0" + (date.getMonth() + 1)).slice(-2) + "-" +
@@ -15,25 +15,18 @@ const todayFormattedDate = () => formatDate(new Date())
 
 const thisWeekDateRange = () =>
     [
-        dayjs().startOf('week').format('YYYY-MM-DD'),
-        dayjs().endOf('week').format('YYYY-MM-DD')
+        formatDate(startOfWeek(new Date())),
+        formatDate(endOfWeek(new Date()))
     ]
 
 const thisMonthDate = () => todayFormattedDate().slice(0, -3)
 
 const dateIncluded = (reference, comparison) => {
-    //console.log(reference, comparison)
-    if (!dayjs(reference).isValid())
+    if (!reference || isValid(new Date(reference)))
         return false
-    else if (dayjs(comparison).isValid())
+    else if (isValid(new Date(comparison)))
         return reference.includes(comparison)
     else if (Array.isArray(comparison) && comparison.length == 2) {
-        /*let ref = dayjs(reference)
-        console.log(ref.isSame(comparison[0], 'day'), ref.isSame(comparison[1], 'day'))
-        return ref.isBetween(comparison[0], comparison[1]) ||
-            ref.isSame(comparison[0], 'day') ||
-            ref.isSame(comparison[1], 'day')
-        */
         return reference >= comparison[0] && reference <= comparison[1]
     }
     else
@@ -49,7 +42,7 @@ const makeAllKeysFalse = obj =>
 
 
 /**
- * FILTER RELATED FUNCTIONS
+ * FILTER TODOS RELATED FUNCTIONS
  */
 const filterByDate = ({ todo, filters }) => {
     if (filters.dateDueUndefined)
@@ -108,7 +101,7 @@ const filterAndSortTodos = ({ todos, filters }) =>
     sortTodosByDateDue(filterTodos({ todos, filters }))
 
 /**
- * STATISTICS RELATED FUNCTIONS
+ * TODOS STATISTICS RELATED FUNCTIONS
  */
 const countTodos = todos => {
     let [all, dueToday, dueThisWeek, dueThisMonth, dueUndefined] = Array(5).fill(0)

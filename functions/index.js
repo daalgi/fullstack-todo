@@ -10,9 +10,12 @@ const {
 } = require('./APIs/todos')
 
 app.get('/todos', getAllTodos)
-app.post('/todo', auth, postOneTodo)
+app.post('/todo', postOneTodo)
+app.delete('/todo/:todoId', deleteTodo)
+app.put('/todo/:todoId', editTodo)
+/*app.post('/todo', auth, postOneTodo)
 app.delete('/todo/:todoId', auth, deleteTodo)
-app.put('/todo/:todoId', auth, editTodo)
+app.put('/todo/:todoId', auth, editTodo)*/
 
 const {
     loginUser,
